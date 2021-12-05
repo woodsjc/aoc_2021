@@ -70,3 +70,28 @@ func Day4Input() ([]int, [][5][5]int) {
 
 	return bingoNumbers, boards
 }
+
+func Day5Input() [][4]int {
+	raw := readInputFile("input/day5.txt")
+	i, j := 0, 0
+
+	segments := make([][4]int, 0)
+	for _, s := range raw {
+		segments = append(segments, [4]int{})
+		j = 0
+
+		for _, pair := range strings.Fields(s) {
+			for _, num := range strings.Split(pair, ",") {
+				tmp, err := strconv.Atoi(num)
+				if err == nil && j < 4 {
+					segments[i][j] = tmp
+					j++
+				}
+			}
+		}
+
+		i++
+	}
+
+	return segments
+}
