@@ -108,12 +108,7 @@ func (c Crabs) MinPosition2() (int, int) {
 }
 
 func cost(n int) int {
-	total := 0
-	for i := 1; i <= n; i++ {
-		total += i
-	}
-
-	return total
+	return n * (n + 1) / 2
 }
 
 func (c Crabs) Distance2(target int) int {
