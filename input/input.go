@@ -95,3 +95,30 @@ func Day5Input() [][4]int {
 
 	return segments
 }
+
+func Day6Input() [9]int64 {
+	raw := readInputFile("input/day6.txt")
+
+	fish := [9]int64{}
+	for _, n := range strings.Split(raw[0], ",") {
+		num, err := strconv.Atoi(n)
+		if err == nil && num >= 0 && num <= 8 {
+			fish[num]++
+		}
+	}
+	return fish
+}
+
+func Day7Input() []int {
+	raw := readInputFile("input/day7.txt")
+
+	crabs := make([]int, 0)
+	for _, s := range strings.Split(raw[0], ",") {
+		num, err := strconv.Atoi(strings.TrimSpace(s))
+		if err == nil {
+			crabs = append(crabs, num)
+		}
+	}
+
+	return crabs
+}
