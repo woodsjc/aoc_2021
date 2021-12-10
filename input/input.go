@@ -122,3 +122,37 @@ func Day7Input() []int {
 
 	return crabs
 }
+
+func Day8Input() []string {
+	return readInputFile("input/day8.txt")
+}
+
+func Day9Input() [][]int {
+	raw := readInputFile("input/day9.txt")
+	i, j := 0, 0
+
+	segments := make([][]int, 0)
+	for _, s := range raw {
+		cols := len(s)
+		if cols == 0 {
+			continue
+		}
+
+		segments = append(segments, make([]int, cols))
+		j = 0
+
+		for _, rawNum := range s {
+			num, err := strconv.Atoi(string(rawNum))
+			if err == nil {
+				segments[i][j] = num
+				j++
+			} else {
+				log.Printf("Unable to parse %v from %s", rawNum, s)
+			}
+		}
+
+		i++
+	}
+
+	return segments
+}
