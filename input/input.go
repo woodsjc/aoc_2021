@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func readInputFile(fileName string) []string {
+func ReadInputFile(fileName string) []string {
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -24,7 +24,7 @@ func readInputFile(fileName string) []string {
 }
 
 func Day4Input() ([]int, [][5][5]int) {
-	raw := readInputFile("input/day4.txt")
+	raw := ReadInputFile("input/day4.txt")
 	if len(raw) < 6 {
 		log.Fatalf("Not enough rows in day 4 input: %v", raw)
 	}
@@ -72,7 +72,7 @@ func Day4Input() ([]int, [][5][5]int) {
 }
 
 func Day5Input() [][4]int {
-	raw := readInputFile("input/day5.txt")
+	raw := ReadInputFile("input/day5.txt")
 	i, j := 0, 0
 
 	segments := make([][4]int, 0)
@@ -97,7 +97,7 @@ func Day5Input() [][4]int {
 }
 
 func Day6Input() [9]int64 {
-	raw := readInputFile("input/day6.txt")
+	raw := ReadInputFile("input/day6.txt")
 
 	fish := [9]int64{}
 	for _, n := range strings.Split(raw[0], ",") {
@@ -110,7 +110,7 @@ func Day6Input() [9]int64 {
 }
 
 func Day7Input() []int {
-	raw := readInputFile("input/day7.txt")
+	raw := ReadInputFile("input/day7.txt")
 
 	crabs := make([]int, 0)
 	for _, s := range strings.Split(raw[0], ",") {
@@ -124,11 +124,11 @@ func Day7Input() []int {
 }
 
 func Day8Input() []string {
-	return readInputFile("input/day8.txt")
+	return ReadInputFile("input/day8.txt")
 }
 
 func Day9Input() [][]int {
-	raw := readInputFile("input/day9.txt")
+	raw := ReadInputFile("input/day9.txt")
 	i, j := 0, 0
 
 	segments := make([][]int, 0)
@@ -155,4 +155,24 @@ func Day9Input() [][]int {
 	}
 
 	return segments
+}
+
+func Day11Input() [10][10]int {
+	raw := ReadInputFile("input/day11.txt")
+	grid := [10][10]int{}
+
+	for i := 0; i < 10; i++ {
+		for j := 0; j < 10; j++ {
+			if i > len(raw) || j > len(raw[i]) {
+				log.Fatalf("Invalid input: input/day11.txt")
+			}
+			num, err := strconv.Atoi(string(raw[i][j]))
+			if err != nil {
+				log.Fatalf("Invalid input: input/day11.txt: %s", raw[i])
+			}
+			grid[i][j] = num
+		}
+	}
+
+	return grid
 }
