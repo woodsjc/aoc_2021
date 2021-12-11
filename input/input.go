@@ -23,6 +23,33 @@ func ReadInputFile(fileName string) []string {
 	return strings.Split(string(data), "\n")
 }
 
+func Day2Input() ([]string, []int) {
+	raw := ReadInputFile("input/day2.txt")
+	directions := make([]string, 0)
+	distances := make([]int, 0)
+
+	for _, l := range raw {
+		if len(l) == 0 {
+			continue
+		}
+
+		for i, s := range strings.Fields(l) {
+			if i == 0 {
+				directions = append(directions, s)
+			} else if i == 1 {
+				num, err := strconv.Atoi(s)
+				if err == nil {
+					distances = append(distances, num)
+				}
+			} else {
+				continue
+			}
+		}
+	}
+
+	return directions, distances
+}
+
 func Day4Input() ([]int, [][5][5]int) {
 	raw := ReadInputFile("input/day4.txt")
 	if len(raw) < 6 {

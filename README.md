@@ -2,6 +2,7 @@
 
 ## Problems
 
+* [Day 2 - Dive!](https://adventofcode.com/2021/day/2)
 * [Day 3 - Binary Diagnostic](https://adventofcode.com/2021/day/3)
 * [Day 4 - Giant Squid](https://adventofcode.com/2021/day/4)
 * [Day 5 - Hydrothermal Venture](https://adventofcode.com/2021/day/5)
@@ -14,6 +15,7 @@
 
 ## Solutions
 
+* [Day 2](cmd/day2/day2_dive.go)
 * [Day 3](cmd/day3/day3_binary_diagnostic.go)
 * [Day 4](cmd/day4/day4_giant_squid.go)
 * [Day 5](cmd/day5/day5_hydrothermal_venture.go)
