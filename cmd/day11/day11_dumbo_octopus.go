@@ -77,8 +77,9 @@ func (g *Grid) Update() int {
 
 	//run through queue
 	for g.q.Len() > 0 {
-		prior, err := g.q.Get()
-		if err != nil {
+		priorInterface, err := g.q.Get()
+		prior, ok := priorInterface.(queue.Point)
+		if err != nil || !ok {
 			fmt.Printf("%v\n", err)
 			continue
 		}

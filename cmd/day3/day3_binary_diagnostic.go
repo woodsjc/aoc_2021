@@ -32,8 +32,8 @@ func part1(lines []string) {
 }
 
 func part2(lines []string) {
-	oxygen := getOxygen(lines)
-	co2 := getCO2(lines)
+	oxygen := getPart2Rate(lines, true)
+	co2 := getPart2Rate(lines, false)
 
 	fmt.Printf("oxygen-%s, co2-%s\n", oxygen, co2)
 	fmt.Printf("Part 2: %d power consumption.\n", convertRate(oxygen)*convertRate(co2))
@@ -52,9 +52,15 @@ func remove(lines []string, i int) []string {
 	return lines[:end]
 }
 
-func getOxygen(lines []string) string {
+func getPart2Rate(lines []string, most bool) string {
 	for i := 0; i < len(lines[0]); i++ {
-		c, _ := getMostLeast(lines, i)
+		var c rune
+		m, l := getMostLeast(lines, i, most)
+		if most {
+			c = m
+		} else {
+			c = l
+		}
 
 		for j := 0; j < len(lines) && len(lines) > 1; j++ {
 			if rune(lines[j][i]) != c {
@@ -72,46 +78,28 @@ func getOxygen(lines []string) string {
 	return lines[0]
 }
 
-func getCO2(lines []string) string {
-	for i := 0; i < len(lines[0]); i++ {
-		_, c := getMostLeast(lines, i)
-
-		for j := 0; j < len(lines) && len(lines) > 1; j++ {
-			if rune(lines[j][i]) != c {
-				lines = remove(lines, j)
-				j--
-			}
-		}
-		//fmt.Printf("c-%v, i-%d, len(lines)-%d, lines-%v\n", string(c), i, len(lines), lines)
-
-		if len(lines) == 1 {
-			break
-		}
-	}
-
-	return lines[0]
-}
-
-func getMostLeast(lines []string, col int) (rune, rune) {
+func getMostLeast(lines []string, col int, most bool) (rune, rune) {
 	one := 0
 	zero := 0
 
 	for _, l := range lines {
 		if l[col] == '1' {
 			one++
-		} else {
+		} else if l[col] == '0' {
 			zero++
+		} else {
+			fmt.Printf("Invalid rune-%v in string-%s\n", l[col], l)
 		}
 	}
 
-	if one >= zero {
+	if one > zero || one == zero && most {
 		return '1', '0'
 	}
 	return '0', '1'
 }
 
 func convertRate(r string) int {
-	num, err := strconv.ParseUint(r, 2, 64)
+	num, err := strconv.ParseUint(r, 2, 32)
 	if err != nil {
 		fmt.Printf("Unable to parse %s: %v\n", r, err)
 	}

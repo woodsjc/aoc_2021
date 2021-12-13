@@ -7,27 +7,26 @@ type Point struct {
 	Y int
 }
 
-type Queue struct {
-	queue []Point
+type Queue []interface{}
+
+func (q *Queue) Add(p interface{}) {
+	if q == nil {
+		q = &Queue{}
+	}
+	*q = append(*q, p)
 }
 
-func (q *Queue) Add(p Point) {
-	if len(q.queue) == 0 {
-		q.queue = make([]Point, 0)
-	}
-	q.queue = append(q.queue, p)
-}
-
-func (q *Queue) Get() (Point, error) {
-	if len(q.queue) == 0 {
-		return Point{}, fmt.Errorf("No items in queue")
+func (q *Queue) Get() (interface{}, error) {
+	if q == nil || len(*q) == 0 {
+		return nil, fmt.Errorf("No items in queue")
 	}
 
-	p := q.queue[0]
-	q.queue = q.queue[1:]
+	slice := *q
+	p := slice[0]
+	*q = slice[1:]
 	return p, nil
 }
 
 func (q Queue) Len() int {
-	return len(q.queue)
+	return len(q)
 }
