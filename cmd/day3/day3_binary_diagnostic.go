@@ -53,32 +53,28 @@ func remove(lines []string, i int) []string {
 }
 
 func getPart2Rate(lines []string, most bool) string {
-	for i := 0; i < len(lines[0]); i++ {
-		var c rune
-		m, l := getMostLeast(lines, i, most)
-		if most {
-			c = m
-		} else {
-			c = l
-		}
+	remaining := make([]string, len(lines))
+	copy(remaining, lines)
+	for i := 0; len(remaining) > 1 && i < len(remaining[0]); i++ {
+		m, l := getMostLeast(remaining, i)
 
-		for j := 0; j < len(lines) && len(lines) > 1; j++ {
-			if rune(lines[j][i]) != c {
-				lines = remove(lines, j)
-				j--
-				//fmt.Printf("Removed %d lines left.\n", len(lines))
+		keep := make([]string, 0)
+		for _, line := range remaining {
+			if most && rune(line[i]) == m ||
+				!most && rune(line[i]) == l {
+				keep = append(keep, line)
 			}
 		}
 
-		if len(lines) == 1 {
-			break
-		}
+		remaining = make([]string, len(keep))
+		copy(remaining, keep)
 	}
 
-	return lines[0]
+	//fmt.Printf("len(remaining):%d\n", len(remaining))
+	return remaining[0]
 }
 
-func getMostLeast(lines []string, col int, most bool) (rune, rune) {
+func getMostLeast(lines []string, col int) (rune, rune) {
 	one := 0
 	zero := 0
 
@@ -92,7 +88,7 @@ func getMostLeast(lines []string, col int, most bool) (rune, rune) {
 		}
 	}
 
-	if one > zero || one == zero && most {
+	if one >= zero {
 		return '1', '0'
 	}
 	return '0', '1'
