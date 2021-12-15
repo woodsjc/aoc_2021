@@ -14,6 +14,7 @@
 * [Day 11 - Dumbo Octopus](https://adventofcode.com/2021/day/11)
 * [Day 12 - Passage Pathing](https://adventofcode.com/2021/day/12)
 * [Day 13 - Transparent Origama](https://adventofcode.com/2021/day/13)
+* [Day 14 - Transparent Origama](https://adventofcode.com/2021/day/14)
 
 ## Solutions
 
@@ -29,6 +30,7 @@
 * [Day 11](cmd/day11/day11_dumbo_octopus.go)
 * [Day 12](cmd/day12/day12_passage_pathing.go)
 * [Day 13](cmd/day13/day13_transparent_origami.go)
+* [Day 14](cmd/day14/day14_polymerization.go)
 
 ### running
 
