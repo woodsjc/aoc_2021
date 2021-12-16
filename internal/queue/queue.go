@@ -30,3 +30,12 @@ func (q *Queue) Get() (interface{}, error) {
 func (q Queue) Len() int {
 	return len(q)
 }
+
+func (q Queue) InQueue(p interface{}) bool {
+	for _, item := range q {
+		if item == p {
+			return true
+		}
+	}
+	return false
+}
