@@ -1,6 +1,9 @@
 package queue
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type Point struct {
 	X int
@@ -38,4 +41,16 @@ func (q Queue) InQueue(p interface{}) bool {
 		}
 	}
 	return false
+}
+
+func (q Queue) GetMin(f func(interface{}) int) interface{} {
+	min := math.MaxInt32
+	var result interface{}
+	for _, data := range q {
+		if f(data) < min {
+			min = f(data)
+			result = data
+		}
+	}
+	return result
 }

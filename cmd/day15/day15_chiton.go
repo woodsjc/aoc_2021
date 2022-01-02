@@ -15,11 +15,21 @@ type Point struct {
 	total int
 }
 
+type QueueEntry struct {
+	p    Point
+	dist int
+}
+
+func (q QueueEntry) Less(other interface{}) bool {
+	return q.dist < other.(QueueEntry).dist
+}
+
 type Grid [][]int
 
 func main() {
 	input := input.ReadInputFile("input/day15.txt")
 	//input = getTestInput()
+	//input = testInput2()
 	grid := parseInput(input)
 
 	part1(grid)
@@ -27,7 +37,7 @@ func main() {
 }
 
 func part1(grid Grid) {
-	fmt.Printf("Part 1: %d\n", Dijkstra(grid, Point{0, 0, grid[0][0]}))
+	fmt.Printf("Part 1: %d\n", Dijkstra(grid, Point{x: 0, y: 0, total: grid[0][0]}))
 }
 
 func part2(grid Grid) {
@@ -38,7 +48,7 @@ func part2(grid Grid) {
 	//	fmt.Printf("%d\n", g)
 	//}
 
-	fmt.Printf("Part 2: %d\n", Dijkstra(expandedGrid, Point{0, 0, expandedGrid[0][0]}))
+	fmt.Printf("Part 2: %d\n", Dijkstra(expandedGrid, Point{x: 0, y: 0, total: expandedGrid[0][0]}))
 }
 
 func expandGrid(grid Grid) Grid {
@@ -56,7 +66,7 @@ func expandGrid(grid Grid) Grid {
 				for l := 0; l < 5; l++ {
 					newVal := grid[i][j] + k + l
 					if newVal > 9 {
-						newVal = newVal % 9
+						newVal -= 9
 					}
 					expanded[i+k*rowMax][j+l*colMax] = newVal
 				}
@@ -67,26 +77,37 @@ func expandGrid(grid Grid) Grid {
 	return expanded
 }
 
+func getTotal(point interface{}) int {
+	p, ok := point.(Point)
+	if !ok {
+		fmt.Printf("Unable to unmarshall interface: %v\n", point)
+		return 0
+	}
+	return p.total
+}
+
 func Dijkstra(grid Grid, start Point) int {
 	dist := make(map[Point]int)
 	prev := make(map[Point]Point)
-	q := queue.Queue{}
+	q := queue.NewPriorityQueue()
+	visited := make(map[Point]bool)
 
 	for i := 0; i < len(grid); i++ {
 		for j := 0; j < len(grid[i]); j++ {
 			p := Point{i, j, grid[i][j]}
 			dist[p] = math.MaxInt32
 			prev[p] = Point{-1, -1, -1}
-			q.Add(p)
+			//q.Push(p, dist[p])
 		}
 	}
 	dist[start] = 0
+	q.Push(start, 0)
 
 	for q.Len() > 0 {
-		currentInterface, err := q.Get()
+		currentInterface := q.Pop()
 		current, ok := currentInterface.(Point)
-		if err != nil || !ok {
-			fmt.Printf("Error or unable to unmarshall from queue: unmarshall-%t, err-%v\n", ok, err)
+		if !ok {
+			fmt.Printf("Unable to unmarshall from queue: unmarshall-%t\n", ok)
 			continue
 		}
 
@@ -96,33 +117,28 @@ func Dijkstra(grid Grid, start Point) int {
 		}
 
 		//each neighbor in queue
-		for i := -1; i <= 1; i++ {
-			for j := -1; j <= 1; j++ {
-				//no diagonal
-				if i == j || i == -j {
-					continue
-				}
+		for _, pair := range [4][2]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}} {
+			i, j := pair[0], pair[1]
+			x, y := current.x+i, current.y+j
 
-				x := current.x + i
-				y := current.y + j
-				//no out of bounds
-				if x < 0 || y < 0 || x >= len(grid) || y >= len(grid[x]) {
-					continue
-				}
+			//no out of bounds
+			if x < 0 || y < 0 || x >= len(grid) || y >= len(grid[x]) {
+				continue
+			}
 
-				neighbor := Point{x, y, grid[x][y]}
-				//slows way down and same answer
-				//if !q.InQueue(neighbor) {
-				//	continue
-				//}
+			neighbor := Point{x: x, y: y, total: grid[x][y]}
+			if _, ok := visited[neighbor]; ok {
+				continue
+			}
 
-				alt := dist[current] + neighbor.total
-				if alt < dist[neighbor] {
-					dist[neighbor] = alt
-					prev[neighbor] = current
-				}
+			alt := dist[current] + neighbor.total
+			if alt < dist[neighbor] {
+				dist[neighbor] = alt
+				prev[neighbor] = current
+				q.Push(neighbor, dist[neighbor])
 			}
 		}
+		visited[current] = true
 	}
 
 	return 0
@@ -172,4 +188,19 @@ func parseInput(raw []string) Grid {
 	}
 
 	return grid
+}
+
+func testInput2() []string {
+	return []string{
+		"1911191111",
+		"1119111991",
+		"9999999111",
+		"9999911199",
+		"9999119999",
+		"9999199999",
+		"9111199999",
+		"9199999111",
+		"9111911191",
+		"9991119991",
+	}
 }
